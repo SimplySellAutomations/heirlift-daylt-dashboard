@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Heirlift Estate Services — Executive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root{--nv:#0F1F38;--bl:#185FA5;--bll:#E8F1FB;--gr:#166534;--am:#92400e;--aml:#FEF3C7;--rd:#b91c1c;--g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g400:#94A3B8;--g600:#475569;--g800:#1E293B;--w:#fff;font-family:'Inter',-apple-system,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--g50);color:var(--g800);font-size:13px}
+.hdr{background:var(--nv);color:#fff;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:100}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.logo{width:32px;height:32px;background:var(--bl);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.co{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em}
+.rt{font-size:15px;font-weight:600}
+.hdr-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.fb{font-size:11px;padding:6px 14px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;font-family:inherit;font-weight:500}
+.fb:hover,.fb.active{background:var(--bl);color:#fff;border-color:var(--bl)}
+.cr{display:none;align-items:center;gap:6px;background:rgba(255,255,255,.08);padding:6px 10px;border-radius:8px}
+.cr.show{display:flex}
+.cr label{font-size:11px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:5px}
+.cr input[type=date]{font-size:11px;padding:3px 6px;border:1px solid rgba(255,255,255,.2);border-radius:5px;background:rgba(255,255,255,.1);color:#fff;font-family:inherit;color-scheme:dark}
+.ab{font-size:11px;padding:5px 12px;border:none;border-radius:5px;background:var(--bl);color:#fff;cursor:pointer;font-family:inherit;font-weight:600}
+.cb{font-size:11px;padding:5px 10px;border:1px solid rgba(255,255,255,.2);border-radius:5px;background:transparent;color:rgba(255,255,255,.6);cursor:pointer;font-family:inherit}
+.gen{font-size:10px;color:rgba(255,255,255,.4)}
+.bnr{padding:8px 28px;font-size:12px;font-weight:500;background:#F0FDF4;color:var(--gr);border-bottom:1px solid #d1fae5}
+.main{padding:20px 28px;max-width:1200px;margin:0 auto}
+.slbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--g200)}
+.slbl:first-child{margin-top:0}
+.ptag{font-size:9px;font-weight:500;background:var(--bll);color:var(--bl);padding:2px 7px;border-radius:4px;text-transform:none;letter-spacing:0;vertical-align:middle;margin-left:6px}
+.kg{display:grid;gap:10px;margin-bottom:6px}.g4{grid-template-columns:repeat(4,1fr)}
+.kpi{background:var(--w);border:1px solid var(--g200);border-radius:10px;padding:12px 14px}
+.kl{font-size:10px;color:var(--g400);margin-bottom:3px}.kv{font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.ks{font-size:10px;color:var(--g400);margin-top:3px}.ks.g{color:var(--gr);font-weight:500}
+.ke{background:var(--w);border:1px solid var(--g200);border-radius:10px;overflow:hidden}
+.keh{padding:12px 14px}
+.eb{display:block;width:100%;text-align:left;font-size:10px;font-weight:600;color:var(--bl);padding:6px 14px 8px;background:none;border:none;border-top:1px solid var(--g100);cursor:pointer;font-family:inherit}
+.eb:hover{background:var(--bll)}.eb.amb{color:var(--am)}.eb.amb:hover{background:var(--aml)}
+.ep{display:none;border-top:1px solid var(--g200);padding:8px 12px 12px;max-height:280px;overflow-y:auto;background:var(--g50)}
+.ep.open{display:block}
+.lr{display:flex;align-items:flex-start;gap:7px;padding:5px 0;border-bottom:1px solid var(--g100)}
+.lr:last-child{border-bottom:none}
+.ld{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.li{flex:1;min-width:0}
+.ll{font-size:11px;font-weight:500;color:var(--bl);text-decoration:none;display:block;word-break:break-word;line-height:1.4}
+.ll:hover{text-decoration:underline}
+.ls{font-size:10px;color:var(--g400)}
+.bdg{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.dt{font-size:10px;color:var(--g400);flex-shrink:0}
+.nd{font-size:11px;color:var(--g400);padding:10px 0;text-align:center}
+.pipe{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--g200);margin-bottom:6px}
+.stg{flex:1;padding:12px 6px;text-align:center;font-size:10px;font-weight:600;border-right:1px solid var(--g200)}
+.stg:last-child{border-right:none}
+.sc{font-size:24px;font-weight:700;display:block;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.s1{background:#EFF6FF;color:#1d4ed8}.s1 .sc{color:#1d4ed8}
+.s2{background:#F0FDF4;color:var(--gr)}.s2 .sc{color:var(--gr)}
+.s3{background:#FFFBEB;color:var(--am)}.s3 .sc{color:var(--am)}
+.tc{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:6px}
+.card{background:var(--w);border:1px solid var(--g200);border-radius:10px;padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{border-bottom:1px solid var(--g200)}
+th{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);padding:5px;text-align:right}
+th:first-child{text-align:left}
+td{padding:5px;color:var(--g600);text-align:right;border-bottom:1px solid var(--g100);font-variant-numeric:tabular-nums}
+td:first-child{text-align:left;font-weight:500;color:var(--g800)}
+tr:last-child td{border-bottom:none}
+tr.tot td{font-weight:700;background:var(--g50);color:var(--g800);border-top:1px solid var(--g200)}
+.cw{position:relative;width:100%;height:150px;margin-top:6px}
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:6px}
+.leg span{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--g600)}
+.leg-d{width:8px;height:8px;border-radius:2px}
+.ir{display:flex;align-items:center;gap:8px;padding:4px 0}
+.av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.in2{font-size:11px;font-weight:500;min-width:90px}
+.it{flex:1;height:5px;background:var(--g100);border-radius:3px;overflow:hidden}
+.ifill{height:100%;border-radius:3px}
+.inum{font-size:11px;font-weight:600;min-width:36px;text-align:right}
+.dv{height:1px;background:var(--g200);margin:18px 0}
+.note{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:10px 14px;font-size:11px;color:var(--am);margin-top:10px;line-height:1.6}
+.foot{background:var(--nv);color:rgba(255,255,255,.4);padding:12px 28px;font-size:10px;display:flex;justify-content:space-between;margin-top:28px;flex-wrap:wrap;gap:4px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--g200);border-radius:2px}
+@media(max-width:800px){.g4{grid-template-columns:repeat(2,1fr)}.tc{grid-template-columns:1fr}.pipe{flex-direction:column}.stg{border-right:none;border-bottom:1px solid var(--g200)}.main{padding:14px}.hdr{padding:12px 14px}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="logo"><svg viewBox="0 0 16 16" fill="white" width="17" height="17"><path d="M2 3h12v2H2zm0 4h8v2H2zm0 4h10v2H2z"/></svg></div>
+    <div><div class="co">Heirlift Estate Services</div><div class="rt">Executive Sales Dashboard</div></div>
+  </div>
+  <div class="hdr-r">
+    <span class="gen">Generated June 17, 2026</span>
+    <button class="fb active" data-p="today">Today</button>
+    <button class="fb" data-p="week">This Week</button>
+    <button class="fb" data-p="month">This Month</button>
+    <button class="fb" data-p="custom">Custom Range</button>
+    <div class="cr" id="cr">
+      <label>From <input type="date" id="df"></label>
+      <label>To <input type="date" id="dt"></label>
+      <button class="ab" id="ab">Apply</button>
+      <button class="cb" id="cb2">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="bnr">✓ Live Salesforce data · June 17, 2026 · PI Queue: 46 · Sales Queue: 17 · 12 opportunities</div>
+<div class="main">
+
+  <div class="slbl">Activity — IC Performance <span class="ptag" id="at">Today</span></div>
+  <div class="card" style="margin-bottom:6px">
+    <table>
+      <thead><tr><th style="text-align:left">Name</th><th style="text-align:left">Role</th><th>Calls</th><th>Texts</th><th>Emails</th></tr></thead>
+      <tbody id="ic-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="slbl">Lead Queues — Current <span class="ptag">Live</span></div>
+  <div class="kg g4">
+    <div class="ke"><div class="keh"><div class="kl">PI Processing Queue</div><div class="kv" style="color:#1d4ed8">46</div></div>
+      <button class="eb" data-t="ep-pi">▼ See all 46 leads</button>
+      <div class="ep" id="ep-pi"><div id="lp-pi"></div></div></div>
+    <div class="ke"><div class="keh"><div class="kl">Sales Queue</div><div class="kv" style="color:var(--gr)">17</div></div>
+      <button class="eb" data-t="ep-sales">▼ See all 17 leads</button>
+      <div class="ep" id="ep-sales"><div id="lp-sales"></div></div></div>
+    <div class="ke"><div class="keh"><div class="kl">Offer Presented</div><div class="kv">12</div><div class="ks g">Bonus eligible</div></div>
+      <button class="eb amb" data-t="ep-offer">▼ See leads</button>
+      <div class="ep" id="ep-offer"><div id="lp-offer"></div></div></div>
+    <div class="kpi"><div class="kl">Total in Queues</div><div class="kv">63</div><div class="ks">PI (46) + Sales (17)</div></div>
+  </div>
+
+  <div class="slbl">Today's Activity <span class="ptag" id="tday-tag">June 17, 2026</span></div>
+  <div class="kg g4">
+    <div class="ke"><div class="keh"><div class="kl">Leads Modified Today</div><div class="kv" id="k-today">38</div></div>
+      <button class="eb" data-t="ep-today">▼ See leads</button>
+      <div class="ep" id="ep-today"><div id="lp-today"></div></div></div>
+    <div class="ke"><div class="keh"><div class="kl">Moved to Signing</div><div class="kv">0</div></div>
+      <button class="eb" data-t="ep-sign">▼ See leads</button>
+      <div class="ep" id="ep-sign"><div class="nd">No signing stage opportunities.</div></div></div>
+    <div class="ke"><div class="keh"><div class="kl">Properties Driven</div><div class="kv">—</div><div class="ks">Fill Driver_Status__c</div></div>
+      <button class="eb" data-t="ep-driven">▼ See leads</button>
+      <div class="ep" id="ep-driven"><div class="nd">No Driver_Status__c values filled yet.</div></div></div>
+    <div class="ke"><div class="keh"><div class="kl">Letters Sent</div><div class="kv">—</div><div class="ks">Fill Letters_Action_Type__c</div></div>
+      <button class="eb" data-t="ep-letters">▼ See leads</button>
+      <div class="ep" id="ep-letters"><div class="nd">No letter fields filled yet.</div></div></div>
+  </div>
+
+  <div class="dv"></div>
+  <div class="slbl">Pipeline Stages</div>
+  <div class="pipe">
+    <div class="stg s1"><span class="sc">0</span>Signing</div>
+    <div class="stg s2"><span class="sc">0</span>Under Agreement</div>
+    <div class="stg s3"><span class="sc">12</span>Present Offer/Options</div>
+  </div>
+
+  <div class="tc">
+    <div class="card">
+      <div class="slbl" style="margin-top:0;border-bottom:none;margin-bottom:8px">IC Lead Assignments <span class="ptag">Today</span></div>
+      <div id="ic-tbl"></div>
+    </div>
+    <div class="card">
+      <div class="slbl" style="margin-top:0;border-bottom:none;margin-bottom:6px">Leads by IC <span class="ptag">Today</span></div>
+      <div class="leg">
+        <span><span class="leg-d" style="background:#378ADD"></span>Adam</span>
+        <span><span class="leg-d" style="background:#BA7517"></span>Zack</span>
+        <span><span class="leg-d" style="background:#D4537E"></span>May</span>
+        <span><span class="leg-d" style="background:#1D9E75"></span>Trevor</span>
+        <span><span class="leg-d" style="background:#7C3AED"></span>Ethan</span>
+        <span><span class="leg-d" style="background:#F59E0B"></span>Paul</span>
+      </div>
+      <div class="cw"><canvas id="ch"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:10px">
+    <div class="slbl" style="margin-top:0;border-bottom:none;margin-bottom:10px">Lead Count per IC <span class="ptag">Today</span></div>
+    <div id="isa-bars"></div>
+  </div>
+
+  <div class="dv"></div>
+  <div class="slbl">Conversion Summary</div>
+  <div class="kg g4">
+    <div class="kpi"><div class="kl">Total in Queues</div><div class="kv">63</div></div>
+    <div class="kpi"><div class="kl">Offers Presented</div><div class="kv" style="color:var(--gr)">12</div></div>
+    <div class="kpi"><div class="kl">In Signing</div><div class="kv" style="color:var(--bl)">0</div></div>
+    <div class="kpi"><div class="kl">Offer Rate</div><div class="kv" style="color:var(--bl)">19%</div><div class="ks">of queue leads</div></div>
+  </div>
+  <div class="note"><strong>Fields not yet filled:</strong> Properties Driven and Letters Sent need <strong>Driver_Status__c</strong> and <strong>Letters_Action_Type__c</strong> filled on leads in Salesforce.</div>
+</div>
+<div class="foot">
+  <span>Heirlift Estate Services · Confidential · Generated June 17, 2026</span>
+  <span>Data: simplysellnw.lightning.force.com · Message Claude to regenerate</span>
+</div>
+
+<script>
+const SF='https://simplysellnw.lightning.force.com';
+const IC=[
+  {n:'Adam Taha',  r:'Senior IC',bg:'#DBEAFE',c:'#1e40af',ch:'#378ADD'},
+  {n:'Zack Foster',r:'IC',       bg:'#FEF3C7',c:'#92400e',ch:'#BA7517'},
+  {n:'May Taha',   r:'IC',       bg:'#FCE7F3',c:'#9d174d',ch:'#D4537E'},
+  {n:'Trevor Awan',r:'IC',       bg:'#D1FAE5',c:'#065f46',ch:'#1D9E75'},
+  {n:'Ethan Jones',r:'IC',       bg:'#EDE9FE',c:'#5b21b6',ch:'#7C3AED'},
+  {n:'Paul',       r:'IC',       bg:'#FEF9C3',c:'#713f12',ch:'#F59E0B'},
+];
+const PI_LEADS=[{"Id":"00QQO00001FAmI02AL","Name":"WILSON - 2615 DATHE ST, DALLAS, TX 75215","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHz2AL","Name":"LOPEZ - 2506 FRUITLAND AVE, FARMERS BRANCH, TX 75234","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHx2AL","Name":"NEEL - 10940 EASTHAM ST, BALCH SPRINGS, TX 75180","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHw2AL","Name":"MALONE - 2520 RED RIVER ST, MESQUITE, TX 75150","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHv2AL","Name":"VASQUEZ - 422 OLD LONDON LN, MESQUITE, TX 75149","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHu2AL","Name":"JONES - 1013 FAIR OAKS DR, GARLAND, TX 75040","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI32AL","Name":"WREN - 3611 KENILWORTH ST, DALLAS, TX 75210","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHt2AL","Name":"TALLENT - 1603 S LAKEVIEW CIR, DUNCANVILLE, TX 75137","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI22AL","Name":"SORRELLS - 4104 PENELOPE ST, DALLAS, TX 75210","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHs2AL","Name":"SAMUELS - 938 LIVE OAK DR, DESOTO, TX 75115","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI12AL","Name":"HILBURN - 2318 METROPOLITAN AVE, DALLAS, TX 75215","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHr2AL","Name":"MCDANIELS - 13151 FOOTHILL DR, DALLAS, TX 13151","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHp2AL","Name":"XIMENEZ - 9804 OAKWOOD DR, DALLAS, TX 75217","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHy2AL","Name":"SMITH - 1510 DAVIS RD, SEAGOVILLE, TX 75159","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FA1su2AD","Name":"ASHBY - 456 STATE ROUTE 505, WINLOCK, WA 98596","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmGj2AL","Name":"RISTOW - 1705 NORTH 32ND PLACE, MOUNT VERNON, WA 98273","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmGl2AL","Name":"NUNEZ - 1017 W MAIN ST, MONROE, WA 98272","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHI2A1","Name":"MCKAY - 21926 W CARDINAL RD NE, GRAND COULEE, WA 99133","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHJ2A1","Name":"BURNS - 1439 THOMAS DR NE, SOAP LAKE, WA 98851","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVD2A1","Name":"CUNNINGHAM - 6724 NE BACON LN, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVE2A1","Name":"OMAN - 10505 E BASELINE RD, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVK2A1","Name":"ELLINGSON - 930 S SKYLINE DR, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVF2A1","Name":"FIESS - 326 SW 7TH AVE, EPHRATA, WA 98823","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVJ2A1","Name":"COBLER - 618 NE BEECH AVE, ROYAL CITY, WA 99357","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVH2A1","Name":"MCKINNEY - 4085 NE RD 6.5, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVM2A1","Name":"FARAG - 1404 S LAKEWAY DR, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVO2A1","Name":"WOOD - 305 E ST, GRAND COULEE, WA 99133","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHS2A1","Name":"VICEDO - 9226 175TH STREET CT E, PUYALLUP, WA 98375","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHT2A1","Name":"OWENSBY - 904 S BALSAM ST, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO0000194X9R2AU","Name":"MASON - 1529 102ND ST E, TACOMA, WA 98445","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9P2AU","Name":"CAMPOS - 1213 S 14TH ST, SUNNYSIDE, WA 98944","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9Q2AU","Name":"KING - 108 CHATMAN ST, HUTCHINS, TX 75141","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9S2AU","Name":"SALAZAR - 3107 PARVIA AVE, DALLAS, TX 75212","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAnVW2A1","Name":"JORDAN - 902 GLEN MEADOW CT, GARLAND, TX 75044","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmHm2AL","Name":"STIGGERS - 3224 MOJAVE DR, DALLAS, TX 75241","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmHc2AL","Name":"WICKERSHAM - 512 RORARY DR, RICHARDSON, TX 75081","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sT2AT","Name":"SATTERLEE - 301 E OLYMPIC DR, GRAPEVIEW, WA 98546","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sU2AT","Name":"ARREDONDO - 180 NE BYERLY DR, BELFAIR, WA 98528","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sJ2AT","Name":"SULLIVAN - WATER ST/SOUTH ST, HAMILTON, WA 98255","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmGo2AL","Name":"BOONE - 1403 LAUREL ST, HOQUIAM, WA 98550","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sI2AT","Name":"MOBLEY - 6909 38TH STREET CT W, UNIVERSITY PLACE, WA 98466","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sC2AT","Name":"CALLAHAN - CASCADE RIVER ROAD, MARBLEMOUNT, WA 98267","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1s12AD","Name":"SCHAFER - 16729 SNEE OOSH ROAD, LA CONNER, WA 98257","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1rV2AT","Name":"PLYMALE - 2232 SW 307TH ST, FEDERAL WAY, WA 98023","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sE2AT","Name":"ALLRED - 46530 BAKER LOOP ROAD, CONCRETE, WA 98237","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001GVFvV2AX","Name":"Test For Lead Score","Owner":"PI Processing Queue","date":"6/12"}];
+const SALES_LEADS=[{"Id":"00QQO00001FAmHg2AL","Name":"SEXTON - 1580 BALLARD RD, SEAGOVILLE, TX 75048","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHa2AL","Name":"KILLOUGH - 4500 VETERANS DR, DALLAS, TX 75216","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHX2A1","Name":"FLOYD - 2719 VIVA DR, MESQUITE, TX 75150","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHY2A1","Name":"LITTLEFIELD - 911 N WATERVIEW DR, RICHARDSON, TX 75080","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHb2AL","Name":"BURNS - 12649 HILLTOP DR, BALCH SPRINGS, TX 12649","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHZ2A1","Name":"ALEXANDER - 3147 MCDERMOTT AVE, DALLAS, TX 75215","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHn2AL","Name":"ANDERSON - 3419 PEBBLESHORES DR, DALLAS, TX 75241","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHj2AL","Name":"MORGAN - 3547 FUREY ST, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHh2AL","Name":"HOUSE - 9913 BECKLEYVIEW AVE, DALLAS, TX 75232","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHe2AL","Name":"OGLES - 4909 EDGEWATER DR, ROWLETT, TX 75088","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHd2AL","Name":"LOUDAMY - 2401 UNIVERSITY DR, ROWLETT, TX 75088","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHf2AL","Name":"DALTON - 1214 CATHERINE ST, SEAGOVILLE, TX 75159","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHi2AL","Name":"LOCKRIDGE - 2910 VALENTINE ST, DALLAS, TX 75215","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHl2AL","Name":"GALLAGA - 2715 CARTWRIGHT ST, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHk2AL","Name":"CANTU - 4939 BERNAL DR, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/15"},{"Id":"00QQO00001IDL6z2AH","Name":"GARZA - 306 FIDELIS AVE, DALLAS, TX 75241","Owner":"Sales Queue","date":"6/14"},{"Id":"00QQO00001FAnVG2A1","Name":"5666 FORNEY RD, DALLAS, TX 75227","Owner":"Sales Queue","date":"6/9"}];
+const ALL_QUEUE_LEADS=[{"Id":"00QQO00001FAmI02AL","Name":"WILSON - 2615 DATHE ST, DALLAS, TX 75215","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHz2AL","Name":"LOPEZ - 2506 FRUITLAND AVE, FARMERS BRANCH, TX 75234","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHx2AL","Name":"NEEL - 10940 EASTHAM ST, BALCH SPRINGS, TX 75180","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHw2AL","Name":"MALONE - 2520 RED RIVER ST, MESQUITE, TX 75150","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHv2AL","Name":"VASQUEZ - 422 OLD LONDON LN, MESQUITE, TX 75149","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHu2AL","Name":"JONES - 1013 FAIR OAKS DR, GARLAND, TX 75040","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI32AL","Name":"WREN - 3611 KENILWORTH ST, DALLAS, TX 75210","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHt2AL","Name":"TALLENT - 1603 S LAKEVIEW CIR, DUNCANVILLE, TX 75137","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI22AL","Name":"SORRELLS - 4104 PENELOPE ST, DALLAS, TX 75210","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHs2AL","Name":"SAMUELS - 938 LIVE OAK DR, DESOTO, TX 75115","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmI12AL","Name":"HILBURN - 2318 METROPOLITAN AVE, DALLAS, TX 75215","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHr2AL","Name":"MCDANIELS - 13151 FOOTHILL DR, DALLAS, TX 13151","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHp2AL","Name":"XIMENEZ - 9804 OAKWOOD DR, DALLAS, TX 75217","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHy2AL","Name":"SMITH - 1510 DAVIS RD, SEAGOVILLE, TX 75159","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FA1su2AD","Name":"ASHBY - 456 STATE ROUTE 505, WINLOCK, WA 98596","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmGj2AL","Name":"RISTOW - 1705 NORTH 32ND PLACE, MOUNT VERNON, WA 98273","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmGl2AL","Name":"NUNEZ - 1017 W MAIN ST, MONROE, WA 98272","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHI2A1","Name":"MCKAY - 21926 W CARDINAL RD NE, GRAND COULEE, WA 99133","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHJ2A1","Name":"BURNS - 1439 THOMAS DR NE, SOAP LAKE, WA 98851","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVD2A1","Name":"CUNNINGHAM - 6724 NE BACON LN, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVE2A1","Name":"OMAN - 10505 E BASELINE RD, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVK2A1","Name":"ELLINGSON - 930 S SKYLINE DR, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVF2A1","Name":"FIESS - 326 SW 7TH AVE, EPHRATA, WA 98823","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVJ2A1","Name":"COBLER - 618 NE BEECH AVE, ROYAL CITY, WA 99357","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVH2A1","Name":"MCKINNEY - 4085 NE RD 6.5, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVM2A1","Name":"FARAG - 1404 S LAKEWAY DR, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAnVO2A1","Name":"WOOD - 305 E ST, GRAND COULEE, WA 99133","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHS2A1","Name":"VICEDO - 9226 175TH STREET CT E, PUYALLUP, WA 98375","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO00001FAmHT2A1","Name":"OWENSBY - 904 S BALSAM ST, MOSES LAKE, WA 98837","Owner":"PI Processing Queue","date":"6/17"},{"Id":"00QQO0000194X9R2AU","Name":"MASON - 1529 102ND ST E, TACOMA, WA 98445","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9P2AU","Name":"CAMPOS - 1213 S 14TH ST, SUNNYSIDE, WA 98944","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9Q2AU","Name":"KING - 108 CHATMAN ST, HUTCHINS, TX 75141","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO0000194X9S2AU","Name":"SALAZAR - 3107 PARVIA AVE, DALLAS, TX 75212","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAnVW2A1","Name":"JORDAN - 902 GLEN MEADOW CT, GARLAND, TX 75044","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmHm2AL","Name":"STIGGERS - 3224 MOJAVE DR, DALLAS, TX 75241","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmHc2AL","Name":"WICKERSHAM - 512 RORARY DR, RICHARDSON, TX 75081","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sT2AT","Name":"SATTERLEE - 301 E OLYMPIC DR, GRAPEVIEW, WA 98546","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sU2AT","Name":"ARREDONDO - 180 NE BYERLY DR, BELFAIR, WA 98528","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sJ2AT","Name":"SULLIVAN - WATER ST/SOUTH ST, HAMILTON, WA 98255","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FAmGo2AL","Name":"BOONE - 1403 LAUREL ST, HOQUIAM, WA 98550","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sI2AT","Name":"MOBLEY - 6909 38TH STREET CT W, UNIVERSITY PLACE, WA 98466","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sC2AT","Name":"CALLAHAN - CASCADE RIVER ROAD, MARBLEMOUNT, WA 98267","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1s12AD","Name":"SCHAFER - 16729 SNEE OOSH ROAD, LA CONNER, WA 98257","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1rV2AT","Name":"PLYMALE - 2232 SW 307TH ST, FEDERAL WAY, WA 98023","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001FA1sE2AT","Name":"ALLRED - 46530 BAKER LOOP ROAD, CONCRETE, WA 98237","Owner":"PI Processing Queue","date":"6/14"},{"Id":"00QQO00001GVFvV2AX","Name":"Test For Lead Score","Owner":"PI Processing Queue","date":"6/12"},{"Id":"00QQO00001FAmHg2AL","Name":"SEXTON - 1580 BALLARD RD, SEAGOVILLE, TX 75048","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHa2AL","Name":"KILLOUGH - 4500 VETERANS DR, DALLAS, TX 75216","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHX2A1","Name":"FLOYD - 2719 VIVA DR, MESQUITE, TX 75150","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHY2A1","Name":"LITTLEFIELD - 911 N WATERVIEW DR, RICHARDSON, TX 75080","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHb2AL","Name":"BURNS - 12649 HILLTOP DR, BALCH SPRINGS, TX 12649","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHZ2A1","Name":"ALEXANDER - 3147 MCDERMOTT AVE, DALLAS, TX 75215","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHn2AL","Name":"ANDERSON - 3419 PEBBLESHORES DR, DALLAS, TX 75241","Owner":"Sales Queue","date":"6/17"},{"Id":"00QQO00001FAmHj2AL","Name":"MORGAN - 3547 FUREY ST, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHh2AL","Name":"HOUSE - 9913 BECKLEYVIEW AVE, DALLAS, TX 75232","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHe2AL","Name":"OGLES - 4909 EDGEWATER DR, ROWLETT, TX 75088","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHd2AL","Name":"LOUDAMY - 2401 UNIVERSITY DR, ROWLETT, TX 75088","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHf2AL","Name":"DALTON - 1214 CATHERINE ST, SEAGOVILLE, TX 75159","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHi2AL","Name":"LOCKRIDGE - 2910 VALENTINE ST, DALLAS, TX 75215","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHl2AL","Name":"GALLAGA - 2715 CARTWRIGHT ST, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/16"},{"Id":"00QQO00001FAmHk2AL","Name":"CANTU - 4939 BERNAL DR, DALLAS, TX 75212","Owner":"Sales Queue","date":"6/15"},{"Id":"00QQO00001IDL6z2AH","Name":"GARZA - 306 FIDELIS AVE, DALLAS, TX 75241","Owner":"Sales Queue","date":"6/14"},{"Id":"00QQO00001FAnVG2A1","Name":"5666 FORNEY RD, DALLAS, TX 75227","Owner":"Sales Queue","date":"6/9"}];
+const TODAY_IC_LEADS=[{"Id":"00QQO000018iNA02AM","Name":"STOCKER - 25232 38TH AVE S, KENT, WA 98032","Owner":"Adam Taha","date":"6/17"},{"Id":"00QQO000018iNEz2AM","Name":"FISH - 912 NE 180TH ST, SHORELINE, WA 98155","Owner":"Adam Taha","date":"6/17"},{"Id":"00QQO00001FA1sB2AT","Name":"SHIMEK - 60517 STATE ROUTE 20, MARBLEMOUNT, WA 98267","Owner":"Adam Taha","date":"6/17"},{"Id":"00QQO00001JLs1x2AD","Name":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","Owner":"Zack Foster","date":"6/17"}];
+const OPPS=[{"Id":"006QO00000qflBVYAY","Name":"Test Mak","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/12"},{"Id":"006QO00000qbwrtYAA","Name":"test prospect","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000qfsL3YAI","Name":"Demo Opportunity","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000qjUTsYAM","Name":"test aniket","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000qr838YAA","Name":"test sample data","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000qxMucYAE","Name":"Test Mak - 14May","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000rSqq0YAC","Name":"AMO- test 01","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000tBHFZYA4","Name":"Test Mak - 3Jun","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000tBY3VYAW","Name":"test mak - demo","StageName":"Present Offer/Options","Owner":"Data Team","date":"6/9"},{"Id":"006QO00000tiIpZYAU","Name":"simply sell-","StageName":"Present Offer/Options","Owner":"Camila Carpio","date":"6/9"},{"Id":"006QO00000qUUU9YAO","Name":"2580814266-","StageName":"Present Offer/Options","Owner":"Adam Taha","date":"6/9"},{"Id":"006QO00000tiJk1YAE","Name":"RUNKLE - CEDAR GROVE AVENUE, CONCRETE, WA 98237","StageName":"Present Offer/Options","Owner":"Kyle Rushing","date":"6/9"}];
+const ZACK_CALLS=[{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":31,"time":"12:03 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":30,"time":"12:13 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":0,"time":"12:09 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":0,"time":"12:12 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":0,"time":"12:02 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":null,"time":"12:07 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":null,"time":"12:11 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":null,"time":"12:11 PM"},{"lead":"GOFF - 310 MADRONA AVE, WOODLAND, WA 98674","leadId":"00QQO00001JLs1x2AD","duration":null,"time":"12:07 PM"}];
+const ACT={
+  today:{calls:{"Zack Foster":9,"Adam Taha":0,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0},texts:{"Zack Foster":12,"Adam Taha":0,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0}},
+  week: {calls:{"Zack Foster":9,"Adam Taha":6,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0},texts:{"Zack Foster":12,"Adam Taha":7,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0}},
+  month:{calls:{"Zack Foster":9,"Adam Taha":25,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0},texts:{"Zack Foster":12,"Adam Taha":59,"May Taha":0,"Trevor Awan":0,"Ethan Jones":0,"Paul":0}},
+};
+
+let chart=null,per='today';
+const $=i=>document.getElementById(i);
+const sv=(i,v)=>{const e=$(i);if(e)e.textContent=v;};
+const sfL=id=>`${SF}/lightning/r/${id}/view`;
+const fD=s=>{if(s===null||s===undefined||s===0)return'No answer';if(s<60)return s+'s';return Math.floor(s/60)+'m '+(s%60)+'s';};
+
+function ob(o){
+  const ic=IC.find(r=>r.n===o);
+  if(ic)return`<span class="bdg" style="background:${ic.bg};color:${ic.c}">${o.split(' ')[0]}</span>`;
+  return`<span class="bdg" style="background:#F1F5F9;color:#475569">${o.replace(' Processing Queue','').replace(' Queue','')}</span>`;
+}
+function lr(r,dot){
+  const url=sfL(r.Id);
+  return`<div class="lr"><div class="ld" style="background:${dot}"></div><div class="li"><a class="ll" href="${url}" target="_blank">${r.Name}</a><div class="ls">${r.Status||r.StageName||''}</div></div>${ob(r.Owner||'')}<span class="dt">${r.date||''}</span></div>`;
+}
+function fill(id,recs,dot){
+  const el=$(id);if(!el)return;
+  el.innerHTML=recs&&recs.length?recs.map(r=>lr(r,dot)).join(''):'<div class="nd">No records.</div>';
+}
+
+function renderIC(p){
+  const act=ACT[p]||ACT.today;
+  const calls=act.calls||{},texts=act.texts||{};
+  const lbl={today:'Today',week:'This Week',month:'This Month',custom:'Custom'}[p]||'Today';
+  sv('at',lbl);
+  const tbody=$('ic-tbody');if(!tbody)return;
+  tbody.innerHTML=IC.map((ic,idx)=>{
+    const c=calls[ic.n]||0,t=texts[ic.n]||0;
+    const init=ic.n.split(' ').map(w=>w[0]).join('');
+    const av=`<span style="width:22px;height:22px;border-radius:50%;background:${ic.bg};color:${ic.c};display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${init}</span>`;
+    const rb=`<span style="font-size:10px;padding:2px 7px;border-radius:4px;background:${ic.bg};color:${ic.c};font-weight:600">${ic.r}</span>`;
+    const hasCD=p==='today'&&ic.n==='Zack Foster'&&ZACK_CALLS.length>0;
+    const cb=c>0?`<span style="font-weight:700;color:#1e40af;cursor:${hasCD?'pointer':'default'}" ${hasCD?`onclick="tD('zd${idx}')"`:''}>${c}${hasCD?' ▼':''}</span>`:`<span style="color:#94A3B8">0</span>`;
+    const tb=t>0?`<span style="font-weight:700;color:var(--gr)">${t}</span>`:`<span style="color:#94A3B8">0</span>`;
+    const cdHTML=hasCD?ZACK_CALLS.map(d=>{
+      const lnk=d.leadId?`<a class="ll" href="${SF}/lightning/r/${d.leadId}/view" target="_blank">${d.lead}</a>`:`<span style="color:#94A3B8">${d.lead}</span>`;
+      const dur=fD(d.duration);const dc=(d.duration&&d.duration>0)?'var(--gr)':'#94A3B8';
+      return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f1f5f9"><div style="width:6px;height:6px;border-radius:50%;background:${ic.c};flex-shrink:0"></div><div style="flex:1;min-width:0;font-size:11px">${lnk}</div><span style="font-size:10px;color:${dc};font-weight:600">${dur}</span><span style="font-size:10px;color:#94A3B8">${d.time}</span></div>`;
+    }).join(''):'';
+    return`<tr><td><span style="display:inline-flex;align-items:center;gap:6px">${av}${ic.n}</span></td><td style="text-align:left">${rb}</td><td>${cb}</td><td>${tb}</td><td style="color:#94A3B8">—</td></tr>
+    ${hasCD?`<tr id="zd${idx}-row" style="display:none"><td colspan="5" style="padding:0 0 0 32px;background:#f8fafc"><div style="padding:8px 0 12px">${cdHTML}</div></td></tr>`:''}`;}).join('');
+}
+
+function tD(id){
+  const r=$(id+'-row');if(!r)return;
+  const o=r.style.display==='none';
+  r.style.display=o?'table-row':'none';
+  document.querySelectorAll(`[onclick="tD('${id}')"]`).forEach(el=>{el.textContent=el.textContent.replace(o?'▼':'▲',o?'▲':'▼');});
+}
+
+function renderQueues(){
+  fill('lp-pi',PI_LEADS,'#1d4ed8');
+  fill('lp-sales',SALES_LEADS,'#15803d');
+  fill('lp-offer',OPPS,'#92400e');
+  fill('lp-today',TODAY_IC_LEADS.concat(PI_LEADS.filter(l=>l.date==='6/17').slice(0,10)).concat(SALES_LEADS.filter(l=>l.date==='6/17')),'#185FA5');
+}
+
+function renderICChart(){
+  const counts={};IC.forEach(ic=>counts[ic.n]=0);
+  TODAY_IC_LEADS.forEach(l=>{const ic=IC.find(r=>r.n===l.Owner);if(ic)counts[ic.n]++;});
+  if(chart){chart.data.datasets[0].data=IC.map(ic=>counts[ic.n]);chart.update();}
+  const be=$('isa-bars');
+  if(be){const mx=Math.max(...Object.values(counts),1);
+    be.innerHTML=IC.map(ic=>{const c=counts[ic.n],p=Math.round(c/mx*100);
+      return`<div class="ir"><div class="av" style="background:${ic.bg};color:${ic.c}">${ic.n.split(' ').map(w=>w[0]).join('')}</div><div class="in2">${ic.n}</div><div class="it"><div class="ifill" style="width:${p}%;background:${ic.ch}"></div></div><div class="inum">${c}</div></div>`;
+    }).join('');}
+  const te=$('ic-tbl');
+  if(te){
+    const rows=IC.map(ic=>{
+      const leads=TODAY_IC_LEADS.filter(l=>l.Owner===ic.n);
+      if(!leads.length)return`<tr><td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:18px;height:18px;border-radius:50%;background:${ic.bg};color:${ic.c};display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${ic.n.split(' ').map(w=>w[0]).join('')}</span>${ic.n.split(' ')[0]}</span></td><td style="text-align:right;color:#94A3B8">0</td></tr>`;
+      return`<tr><td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:18px;height:18px;border-radius:50%;background:${ic.bg};color:${ic.c};display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">${ic.n.split(' ').map(w=>w[0]).join('')}</span>${ic.n.split(' ')[0]}</span></td><td style="text-align:right;font-weight:600">${leads.length}</td></tr>`;
+    }).join('');
+    te.innerHTML=`<table><thead><tr><th style="text-align:left">IC</th><th>Leads today</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+}
+
+function setPeriod(p){
+  per=p;
+  document.querySelectorAll('.fb[data-p]').forEach(b=>b.classList.toggle('active',b.dataset.p===p));
+  const cr=$('cr');
+  if(p==='custom'){cr.classList.add('show');return;}
+  cr.classList.remove('show');
+  renderIC(p);
+}
+
+window.addEventListener('load',()=>{
+  const ctx=$('ch').getContext('2d');
+  chart=new Chart(ctx,{type:'bar',data:{labels:IC.map(ic=>ic.n.split(' ')[0]),datasets:[{data:IC.map(()=>0),backgroundColor:IC.map(ic=>ic.ch),borderWidth:0,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,ticks:{font:{size:10},stepSize:5}}}}});
+  $('df').value=new Date(Date.now()-30*864e5).toISOString().split('T')[0];
+  $('dt').value=new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.fb[data-p]').forEach(b=>b.addEventListener('click',function(){setPeriod(this.dataset.p);}));
+  $('ab').addEventListener('click',()=>{const f=$('df').value,t=$('dt').value;if(!f||!t){alert('Select both dates.');return;}$('cr').classList.remove('show');setPeriod('custom');});
+  $('cb2').addEventListener('click',()=>setPeriod('today'));
+  document.querySelectorAll('.eb[data-t]').forEach(b=>b.addEventListener('click',function(){
+    const p=$(this.dataset.t);if(!p)return;
+    const o=p.classList.toggle('open');
+    this.textContent=o?this.textContent.replace('▼','▲').replace(/See.*/,'Hide'):this.textContent.replace('▲','▼').replace('Hide',this.dataset.t==='ep-pi'?'See all 46 leads':this.dataset.t==='ep-sales'?'See all 17 leads':'See leads');
+  }));
+  renderQueues();
+  renderICChart();
+  renderIC('today');
+});
+</script>
+</body>
+</html>
